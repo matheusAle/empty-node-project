@@ -1,35 +1,18 @@
-<form>
-  <input
-    name="name"
-    placeholder="Nome"
-    [(ngModel)]="user.name"
-    [ngModelOptions]="{standalone: true}"
-  >
-  <input
-    type="email"
-    placeholder="E-mail"
-    [(ngModel)]="user.email"
-    [ngModelOptions]="{standalone: true}"
-  >
-  <button (click)="registerUser()">
-    Criar
-  </button>
-</form>
-{{ user | json }}
-
 <table>
   <thead>
     <tr>
       <th>ID</th>
       <th>Name</th>
-      <th>Email</th>
+      <th>Descrição</th>
+      <th>preço</th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let user of usersList">
-      <td>{{ user.id }}</td>
-      <td>{{ user.name }}</td>
-      <td>{{ user.email }}</td>
+    <tr *ngFor="let product of products">
+      <td>{{ product.id }}</td>
+      <td>{{ product.name }}</td>
+      <td>{{ product.description.name }}</td>
+      <td>{{ product.price.value | currency:'BRL':true }}</td>
     </tr>
   </tbody>
 </table>

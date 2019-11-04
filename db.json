@@ -1,0 +1,50 @@
+{
+  "products": [
+        {
+            "id": 1,
+            "name": "Produto 1"
+        },
+        {
+            "id": 2,
+            "name": "Produto 2"
+        },
+        {
+            "id": 3,
+            "name": "Produto 3"
+        }
+  ],
+  "prices": [
+      {
+          "id": 1,
+          "productId": 1,
+          "value": 400
+      },
+      {
+          "id": 2,
+          "productId": 2,
+          "value": 45.78
+      },
+      {
+          "id": 3,
+          "productId": 3,
+          "value": 6.78
+      }
+  ],
+  "descriptions": [
+    {
+        "id": 1,
+        "productId": 1,
+        "name": "Descrição do produto 1"
+    },
+    {
+        "id": 2,
+        "productId": 2,
+        "name": "Descrição do produto 2"
+    },
+    {
+        "id": 3,
+        "productId": 3,
+        "name": "Descrição do produto 3"
+    }
+  ]
+}
