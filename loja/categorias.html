@@ -1,0 +1,169 @@
+
+<!DOCTYPE html>
+<html>
+<style>
+table,th,td {
+  border : 1px solid black;
+  border-collapse: collapse;
+}
+th,td {
+  padding: 5px;
+}
+.clseditar{}
+.clsexcluir{}
+#divForm{display: none;}
+</style>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+<body>
+
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Super Loja</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link active" href="categorias.html">Categorias</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="ofertas.html">Ofertas</a>
+            </li>
+            </ul>
+        </div>
+    </nav>
+
+<div class="container">
+    <h2>CRUD Categorias - JQuery</h2>
+    <table id="lista"></table>
+    <p id="paginacao"></p>
+    <p id="novoCategoria">Nova</p>
+    <div id="divForm">
+        <h3>Categoria</h3>
+        <form onsubmit="return false;" id="formulario">
+            <input type="hidden" id="frmCategoriaCodigo">
+            Nome: <input type="text" id="frmNome"><br>
+            <input type="hidden" id="frmloja" value="lojaxpto"><br>
+            <button type="button" id="incluirAlterarCategoria">Nova/Alterar</button>
+        </form>
+    <div>
+
+</div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>    
+<script>
+
+var url = "https://clienteweb2017.000webhostapp.com/loja/categoria/";
+var loja = "43406E41981A";
+
+$( document ).ready(function() {
+    buscarDados();
+	
+	function buscarDados() {
+		$.get(url+"getCategorias.php?loja="+loja)
+		.done(function(data){
+		    var obj = JSON.parse(data)
+			montarLinhas(obj.categorias);
+			$("#divForm").slideUp();
+		})
+		.fail(function(){
+		   alert("falha");
+		});
+		
+	}  	
+	function incluirDados() {			
+		$.get(url+"createCategoria.php?nome=" + $("#frmNome").val()+"&loja="+ loja)
+		.done(function(data){
+		    console.log(data);
+			buscarDados();
+		})
+		.fail(function(){
+		   alert("falha");
+		});		
+	}  	
+	function alterarDados() {			
+		$.get(url+"updateCategoria.php?codigo="+ $("#frmCategoriaCodigo").val() +"&nome=" + $("#frmNome").val() + "&loja="+loja)
+		.done(function(data){
+		    console.log(data);
+			buscarDados();
+		})
+		.fail(function(){
+		   alert("falha");
+		});		
+	}  	
+	function montarLinhas(data) {
+		$("#lista").empty();
+		$("#lista")
+				.append($("<tr />")
+					.append($("<th />").text("CÓDIGO"))
+					.append($("<th />").text("NOME"))
+					.append($("<th />").text("Editar"))
+					.append($("<th />").text("Excluir"))
+				);
+		$.each(data, function( key, value ) {
+			$("#lista")
+				.append($("<tr />")
+					.append($("<td />").text(value.codigo))
+					.append($("<td />").text(value.nome))
+					.append($("<td />")
+						.append($("<a />")
+							.text("Editar")
+							.attr("href", "#")
+							.attr("class", "clseditar")
+						)
+					)
+					.append($("<td />")
+						.append($("<a />")
+							.text("Excluir")
+							.attr("href", "#")
+							.attr("class", "clsexcluir")
+						)
+					)
+				);		
+		});
+	
+    }
+	$("body").on("click",".clseditar",function(){
+			//console.log($(this).parent().siblings().eq(0).text());
+
+   			var codigo = $(this).parent().siblings().eq(0).text();
+			var nome = $(this).parent().siblings().eq(1).text();
+			
+			$("#frmCategoriaCodigo").val(codigo);
+			$("#frmNome").val(nome);
+			$("#divForm").slideDown();
+
+
+	});	
+	$("body").on("click",".clsexcluir",function(){
+	
+		$.get(url+"deleteCategoria.php?loja=" + loja+ "&codigo="+ $(this).parent().siblings().eq(0).text())
+		.done(function(data){
+		    console.log(data);
+			buscarDados();
+		})
+		.fail(function(){
+		   alert("falha");
+		});
+	});		
+	$("#incluirAlterarCategoria").click(function(){
+	   if ($("#frmCategoriaCodigo").val() !=""){
+	        alterarDados();
+	    }else{
+			incluirDados();
+		}
+	});	
+
+	$("#novoCategoria").click(function(){
+			$("#frmCategoriaCodigo").val("");
+			$("#frmNome").val("");
+	  $("#divForm").slideToggle();
+	});
+});
+</script>
+</body>
+</html>
